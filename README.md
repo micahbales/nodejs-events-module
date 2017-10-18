@@ -106,3 +106,13 @@ If you do, `this` will not reference the `EventEmitter` instance.
 
 *`02_arguments_this.js` shows how `this` works in listener functions of both
 standard and arrow types.*
+
+## 3. Asynchronous vs Synchronous
+
+When an `EventListener` is activated by `.emit()`, it calls all of its
+listeners in the order that they were registered. This helps ensure that
+events are properly sequenced, and avoids race conditions and other errors.
+If we need a listener function to operate asynchronously, we can achieve
+this by using `setImmediate()` or `process.nextTick()`.
+
+*For an example of this, check out `02_arguments_this.js`*
