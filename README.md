@@ -151,3 +151,12 @@ So far we've covered how to add listeners, but we can also easily remove them
 using `emitter.removeListener` and `emitter.removeAllListeners()`.
 
 *See 06_remove_listeners for code examples*
+
+## 7. Ordering Listeners
+
+Under normal circumstances, when an event is emitted, its listeners are
+invoked in the order that they were registered. However, it is possible to
+change the sequence of listeners, using `emitter.prependListener()` and
+`emitter.prependOnceListener()`.
+
+*See 07_prepend_listeners for code examples*
