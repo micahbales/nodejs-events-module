@@ -129,3 +129,18 @@ method, when the event is emitted the listener is unregistered and *then*
 called. (Think of it as an function being popped off of an array and invoked.)
 
 *See `04_on_once.js` for an example of how this works.*
+
+## 5. Errors As Events  
+
+What happens when an error occurs within an `EventEmitter` instance? Node.js
+treats such errors as a special case of event. If there's no listener registered for `'error'` when an `'error'` event occurs, then Node registers
+the error, prints a stack trace, and exits.
+
+No one wants Node to blow up, so it's a really good idea to register a
+listener for the `'error'` event. A great way to make sure that errors are
+always handled is to register a listener on the `process` object's
+`uncaughtException` event.
+
+That's just a fallback, though. It's best practice to alway add a listener to each `emitter` instance, to catch error events.
+
+*Check out 05_error_event for examples*
