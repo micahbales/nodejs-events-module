@@ -161,11 +161,16 @@ change the sequence of listeners, using `emitter.prependListener()` and
 
 *See 07_prepend_listeners for code examples*
 
-## 8. Finding Events & Listeners
+## 8. Listing Events & Listeners
 
-// getting event/listeners arrays:
-emitter.eventNames()
-emitter.listeners(eventName)
+Sometimes, it's helpful to be able to iterate through all our events. We can
+do that with `emitter.eventNames()`, which produces a nice array of all events
+registered with an emitter.
+
+By using `emitter.listeners(eventName)`, we can get an array of every function
+that is triggered by a particular event.
+
+ *See 08_listing_events_listeners for code examples*
 
 ## 9. Maximum Listeners
 
