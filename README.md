@@ -144,3 +144,10 @@ always handled is to register a listener on the `process` object's
 That's just a fallback, though. It's best practice to alway add a listener to each `emitter` instance, to catch error events.
 
 *Check out 05_error_event for examples*
+
+## 6. Removing Listeners
+
+So far we've covered how to add listeners, but we can also easily remove them
+using `emitter.removeListener` and `emitter.removeAllListeners()`.
+
+*See 06_remove_listeners for code examples*
