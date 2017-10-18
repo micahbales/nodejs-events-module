@@ -116,3 +116,16 @@ If we need a listener function to operate asynchronously, we can achieve
 this by using `setImmediate()` or `process.nextTick()`.
 
 *For an example of this, check out `02_arguments_this.js`*
+
+## 4. Handling Events Just One Time
+
+Normally, when we attach listeners using the `emitter.on()` method, their
+callbacks will be fired every time an event is emitted. But sometimes we don't
+want a repeat performance; we just want the callback to go off once, and then
+stop.
+
+A handy way to achieve this effect is to employ `emitter.once()`. Using this
+method, when the event is emitted the listener is unregistered and *then*
+called. (Think of it as an function being popped off of an array and invoked.)
+
+*See `04_on_once.js` for an example of how this works.*
