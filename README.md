@@ -83,7 +83,7 @@ We've seen how the Event Loop makes it possible for Javascript to operate in
 ways that are non-blocking and asynchronous. Perhaps not surprisingly, the
 Events Module is one of the major places where this plays out in practice.
 
-## Emitters and Listeners
+## 1. Emitters and Listeners
 
 Much of Node's core API is built around an asynchronous, event-driven
 architecture. This architecture is rooted in two types of objects:
@@ -94,3 +94,15 @@ function object) to be called.
 
 *See `01_emitters_listeners.js` for a simple example of how listeners and
 emitters are created and interact.*
+
+## 2. Passing Arguments and `this` to Listeners
+
+The `eventEmitter.emit()` method allows us to pass an arbitrary set of
+arguments to listener functions. When a standard listener function is called,
+`this` will refer to the `EventEmitter` to which the listener is attached.
+
+It's allowed, but not recommended, to use arrow functions with listeners.
+If you do, `this` will not reference the `EventEmitter` instance.
+
+*`02_arguments_this.js` shows how `this` works in listener functions of both
+standard and arrow types.*
