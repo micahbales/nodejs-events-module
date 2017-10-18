@@ -160,3 +160,16 @@ change the sequence of listeners, using `emitter.prependListener()` and
 `emitter.prependOnceListener()`.
 
 *See 07_prepend_listeners for code examples*
+
+## 8. Finding Events & Listeners
+
+// getting event/listeners arrays:
+emitter.eventNames()
+emitter.listeners(eventName)
+
+## 9. Maximum Listeners
+
+// max listeners
+EventEmitter.defaultMaxListeners()
+emitter.setMaxListeners()
+emitter.setMaxListeners(n)
