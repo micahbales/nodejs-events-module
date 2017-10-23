@@ -170,11 +170,21 @@ registered with an emitter.
 By using `emitter.listeners(eventName)`, we can get an array of every function
 that is triggered by a particular event.
 
- *See 08_listing_events_listeners for code examples*
+*See 08_listing_events_listeners for code examples*
 
 ## 9. Maximum Listeners
 
-// max listeners
-EventEmitter.defaultMaxListeners()
-emitter.setMaxListeners()
-emitter.setMaxListeners(n)
+By default, Node.js limits the number of listeners that can be registered for a
+single event to 10. This limit is put in place to help avoid memory leaks.
+However, there are several ways that Node.js allows us to change the default
+listener maximum.
+
+To change the maximum number of listeners for a particular event, we can use
+`emitter.setMaxListeners(n)`. It is also possible to change the global
+maximum for all listeners via `EventEmitter.defaultMaxListeners()`.
+
+(Note: It is possible to exceed the maximum number of listeners for an event.
+If you do, `EventEmitter` will output a trace warning to stderr, indicating that
+a "possible EventEmitter memory leak" has been detected.)
+
+*See 09_max_listeners for code examples*
