@@ -188,3 +188,8 @@ If you do, `EventEmitter` will output a trace warning to stderr, indicating that
 a "possible EventEmitter memory leak" has been detected.)
 
 *See 09_max_listeners for code examples*
+
+## 10. Source Dive: `emitter.addListener()`
+
+In *10_add_listener_source*, we take a look at what is going on under the hood
+in the `emitter.addListener()` function, also known as `.on()`.
