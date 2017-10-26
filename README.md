@@ -193,3 +193,8 @@ a "possible EventEmitter memory leak" has been detected.)
 
 In *10_add_listener_source*, we take a look at what is going on under the hood
 in the `emitter.addListener()` function, also known as `.on()`.
+
+## 11. Source Dive: `emitter.emit()`
+
+What happens in the Node.js source code when we call a named event? Let's find
+out in `11_emit_source`.
