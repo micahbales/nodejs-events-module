@@ -198,3 +198,10 @@ in the `emitter.addListener()` function, also known as `.on()`.
 
 What happens in the Node.js source code when we call a named event? Let's find
 out in `11_emit_source`.
+
+## 12. Going Async with Synchronous Events
+
+A common misconception among users of Node.js is that events are themselves
+asynchronous. They're not. While the callbacks that events invoke are executed
+asynchronously, events themselves are called in order. Let's take a look at an
+example of this in `11_set_immediate`.
