@@ -205,3 +205,10 @@ A common misconception among users of Node.js is that events are themselves
 asynchronous. They're not. While the callbacks that events invoke are executed
 asynchronously, events themselves are called in order. Let's take a look at an
 example of this in `11_set_immediate`.
+
+## 13. The Event Loop in Action
+
+Thanks to the phases of the Event Loop, how you call events makes a big 
+difference in terms of their timing. We can get a better idea of exactly how
+the order of operations works in the Event Loop by checking out the code in
+`13_who_prints_first`.
