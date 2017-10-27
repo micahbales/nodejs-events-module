@@ -15,8 +15,9 @@ Meanwhile, Node continues its synchronous operations in the Event Loop.
 
 ## The Phases of the Event Loop
 
-The Event Loop happens in distinct stages. In each one, a queue of FIFO
-callbacks are executed before moving on to the next phase.
+The Event Loop happens in distinct stages. In each one, a queue of
+[FIFO](https://en.wikipedia.org/wiki/FIFO) callbacks are executed
+before moving on to the next phase.
 
 ### Timers
 
@@ -50,6 +51,9 @@ the queue in the polling phase. If the poll phase becomes idle, Node may
 immediately move to the Check phase to execute callbacks scheduled with
 `setImmediate()`.
 
+*See `12_set_immediate.js` for an example of how `setImmediate()` can impact
+the flow of events.*
+
 ### Close Callbacks
 
 This phase is where the `close` event is emitted when sockets or handles are
@@ -69,7 +73,8 @@ differently depending on when they are called.
 a major role in sequencing events. Simply put, `process.nextTick()` executes
 an operation immediately after the current phase ends.
 
-The Node.js Guides recommend against using `process.nextTick()` in most
+While `process.nextTick()` is used extensively in the Node source code, the
+Node.js Guides recommend against using `process.nextTick()` in most
 circumstances. Instead, use `setImmediate()`. It's easier to reason about,
 and it leads to code that is more broadly compatible across environments,
 including the browser.
@@ -95,7 +100,36 @@ function object) to be called.
 *See `01_emitters_listeners.js` for a simple example of how listeners and
 emitters are created and interact.*
 
-## 2. Passing Arguments and `this` to Listeners
+## 2. Source Dive: `emitter.addListener()`
+
+In *02_add_listener_source.js*, we take a look at what is going on under the hood
+in the `emitter.addListener()` function, also known as `.on()`.
+
+## 3. Source Dive: `emitter.emit()`
+
+What happens in the Node.js source code when we call a named event? Let's find
+out in `03_emit_source.js`.
+
+## 4. Going Async with Synchronous Events
+
+A common misconception among users of Node.js is that events are themselves
+asynchronous. They're not. While the callbacks that events invoke are executed
+asynchronously, events themselves are called in order. Let's take a look at an
+example of this in `04_set_immediate.js`.
+
+## 5. The Event Loop in Action
+
+Thanks to the phases of the Event Loop, how you call events makes a big
+difference in terms of their timing. We can get a better idea of exactly how
+the order of operations works in the Event Loop by checking out the code in
+`05_who_prints_first.js`.
+
+## 6. More Examples
+
+The following examples give a sense of how the Events module API is used. For
+further reading, check out the Node.js documentation and source code.
+
+### 6a. Passing Arguments and `this` to Listeners
 
 The `eventEmitter.emit()` method allows us to pass an arbitrary set of
 arguments to listener functions. When a standard listener function is called,
@@ -104,10 +138,10 @@ arguments to listener functions. When a standard listener function is called,
 It's allowed, but not recommended, to use arrow functions with listeners.
 If you do, `this` will not reference the `EventEmitter` instance.
 
-*`02_arguments_this.js` shows how `this` works in listener functions of both
+*`06a_arguments_this.js` shows how `this` works in listener functions of both
 standard and arrow types.*
 
-## 3. Asynchronous vs Synchronous
+### 6b. Asynchronous vs Synchronous
 
 When an `EventListener` is activated by `.emit()`, it calls all of its
 listeners in the order that they were registered. This helps ensure that
@@ -115,9 +149,9 @@ events are properly sequenced, and avoids race conditions and other errors.
 If we need a listener function to operate asynchronously, we can achieve
 this by using `setImmediate()` or `process.nextTick()`.
 
-*For an example of this, check out `02_arguments_this.js`*
+*For an example of this, check out `06b_async_vs_sync.js`*
 
-## 4. Handling Events Just One Time
+### 6c. Handling Events Just One Time
 
 Normally, when we attach listeners using the `emitter.on()` method, their
 callbacks will be fired every time an event is emitted. But sometimes we don't
@@ -128,9 +162,9 @@ A handy way to achieve this effect is to employ `emitter.once()`. Using this
 method, when the event is emitted the listener is unregistered and *then*
 called. (Think of it as an function being popped off of an array and invoked.)
 
-*See `04_on_once.js` for an example of how this works.*
+*See `06c_on_once.js` for an example of how this works.*
 
-## 5. Errors As Events  
+### 6d. Errors As Events  
 
 What happens when an error occurs within an `EventEmitter` instance? Node.js
 treats such errors as a special case of event. If there's no listener registered for `'error'` when an `'error'` event occurs, then Node registers
@@ -143,25 +177,25 @@ always handled is to register a listener on the `process` object's
 
 That's just a fallback, though. It's best practice to alway add a listener to each `emitter` instance, to catch error events.
 
-*Check out 05_error_event for examples*
+*Check out 06d_error_event.js for examples*
 
-## 6. Removing Listeners
+### 6e. Removing Listeners
 
 So far we've covered how to add listeners, but we can also easily remove them
 using `emitter.removeListener` and `emitter.removeAllListeners()`.
 
-*See 06_remove_listeners for code examples*
+*See 06e_remove_listeners.js for code examples*
 
-## 7. Ordering Listeners
+### 7f. Ordering Listeners
 
 Under normal circumstances, when an event is emitted, its listeners are
 invoked in the order that they were registered. However, it is possible to
 change the sequence of listeners, using `emitter.prependListener()` and
 `emitter.prependOnceListener()`.
 
-*See 07_prepend_listeners for code examples*
+*See 06f_prepend_listeners.js for code examples*
 
-## 8. Listing Events & Listeners
+### 8g. Listing Events & Listeners
 
 Sometimes, it's helpful to be able to iterate through all our events. We can
 do that with `emitter.eventNames()`, which produces a nice array of all events
@@ -170,9 +204,9 @@ registered with an emitter.
 By using `emitter.listeners(eventName)`, we can get an array of every function
 that is triggered by a particular event.
 
-*See 08_listing_events_listeners for code examples*
+*See 06g_listing_events_listeners.js for code examples*
 
-## 9. Maximum Listeners
+### 9h. Maximum Listeners
 
 By default, Node.js limits the number of listeners that can be registered for a
 single event to 10. This limit is put in place to help avoid memory leaks.
@@ -187,28 +221,4 @@ maximum for all listeners via `EventEmitter.defaultMaxListeners()`.
 If you do, `EventEmitter` will output a trace warning to stderr, indicating that
 a "possible EventEmitter memory leak" has been detected.)
 
-*See 09_max_listeners for code examples*
-
-## 10. Source Dive: `emitter.addListener()`
-
-In *10_add_listener_source*, we take a look at what is going on under the hood
-in the `emitter.addListener()` function, also known as `.on()`.
-
-## 11. Source Dive: `emitter.emit()`
-
-What happens in the Node.js source code when we call a named event? Let's find
-out in `11_emit_source`.
-
-## 12. Going Async with Synchronous Events
-
-A common misconception among users of Node.js is that events are themselves
-asynchronous. They're not. While the callbacks that events invoke are executed
-asynchronously, events themselves are called in order. Let's take a look at an
-example of this in `11_set_immediate`.
-
-## 13. The Event Loop in Action
-
-Thanks to the phases of the Event Loop, how you call events makes a big 
-difference in terms of their timing. We can get a better idea of exactly how
-the order of operations works in the Event Loop by checking out the code in
-`13_who_prints_first`.
+*See 06h_max_listeners.js for code examples*
